@@ -1,4 +1,5 @@
 import java.io.File;
+import java.lang.Math;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -21,10 +22,10 @@ public class WordleSolver {
 			return position;
 		} catch (IOException e) {
 			e.printStackTrace();
-			return 0;
+			return -1;
 		} catch (IndexOutOfBoundsException e) {
 			System.out.println("File does not contain any possible words with these restrictions");
-			return 0;
+			return -1;
 		} finally {
 			try {
 				if (stream != null)
@@ -39,18 +40,19 @@ public class WordleSolver {
 			throws IOException, IndexOutOfBoundsException {
 		FileChannel fc = stream.getChannel();
 		RandomAccessFileReader buffer = new RandomAccessFileReader(fc);
-		
-		long fileLength = file.length();
-		long position = fileLength / 2;
-		position += (position % wordLengthWithNewline); // Snap to the start of the next word
-		Character candidate = buffer.getChar(position);
+
+		long minSearched = 0;
+		long maxSearched = Math.ceilDiv(file.length(), wordLengthWithNewline);
+		long position = maxSearched / 2;
+		Character candidate = buffer.getChar(position * wordLengthWithNewline);
 		while (!candidate.equals(letterToFind)) {
 			if ((int) candidate < (int) letterToFind) {
-				position += wordLengthWithNewline;
+				minSearched = position;
 			} else {
-				position -= wordLengthWithNewline;
+				maxSearched = position;
 			}
-			candidate = buffer.getChar(position);
+			position = (minSearched + maxSearched) / 2;
+			candidate = buffer.getChar(position * wordLengthWithNewline);
 		}
 		return position;
 	}
