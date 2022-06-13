@@ -40,20 +40,22 @@ public class WordleSolver {
 			throws IOException, IndexOutOfBoundsException {
 		FileChannel fc = stream.getChannel();
 		RandomAccessFileReader buffer = new RandomAccessFileReader(fc);
+		// Binary search
+		long min = 0;
+		long max = Math.ceilDiv(file.length(), wordLengthWithNewline);
+		while (min <= max) {
+			long pos = min + (max - min) / 2; // Average, but keeps the numbers lower to prevent integer overflow
+			Character currentLetter = buffer.getChar(pos * wordLengthWithNewline);
 
-		long minSearched = 0;
-		long maxSearched = Math.ceilDiv(file.length(), wordLengthWithNewline);
-		long position = maxSearched / 2;
-		Character candidate = buffer.getChar(position * wordLengthWithNewline);
-		while (!candidate.equals(letterToFind)) {
-			if ((int) candidate < (int) letterToFind) {
-				minSearched = position;
-			} else {
-				maxSearched = position;
+			if (currentLetter.equals(letterToFind)) {
+				return pos;
 			}
-			position = (minSearched + maxSearched) / 2;
-			candidate = buffer.getChar(position * wordLengthWithNewline);
+			if ((int) currentLetter < (int) letterToFind) {
+				min = pos + 1;
+			} else {
+				max = pos - 1;
+			}
 		}
-		return position;
+		return -1;
 	}
 }
