@@ -1,5 +1,7 @@
 import junit.framework.TestCase;
 
+import static org.junit.Assert.assertArrayEquals;
+
 import java.io.File;
 
 public class WordleSolverTest extends TestCase {
@@ -7,28 +9,33 @@ public class WordleSolverTest extends TestCase {
 		String path = this.getClass().getClassLoader().getResource("").getPath();
 		File file = new File(path + "testFiles/alphabetical");
 		
-		long result;
+		long[] result;
+		long[] expected;
 		// Forward
-		result = WordleSolver.findFirstLetterInstance(file, 'f');
-		assertEquals(5, result);
+		expected = new long[]{5, 5};
+		result = knownFirstLetter.getRange(file, 'f');
+		assertArrayEquals(expected, result);
 		// Middle
-		result = WordleSolver.findFirstLetterInstance(file, 'd');
-		assertEquals(3, result);
+		expected = new long[]{3, 3};
+		result = knownFirstLetter.getRange(file, 'd');
+		assertArrayEquals(expected, result);
 		// Backward
-		result = WordleSolver.findFirstLetterInstance(file, 'b');
-		assertEquals(1, result);
+		expected = new long[]{1, 1};
+		result = knownFirstLetter.getRange(file, 'b');
+		assertArrayEquals(expected, result);
 	}
 
 	public void testFindFirstDoesntExist() throws Exception {
 		String path = this.getClass().getClassLoader().getResource("").getPath();
 		File file = new File(path + "testFiles/allB");
 		
-		long result;
+		long[] result;
+		long[] error = {-1, -1};
 		// Run off start of file
-		result = WordleSolver.findFirstLetterInstance(file, 'a');
-		assertEquals(-1, result);
+		result = knownFirstLetter.getRange(file, 'a');
+		assertArrayEquals(error, result);
 		// Run off end of file
-		result = WordleSolver.findFirstLetterInstance(file, 'z');
-		assertEquals(-1, result);
+		result = knownFirstLetter.getRange(file, 'z');
+		assertArrayEquals(error, result);
 	}
 }
