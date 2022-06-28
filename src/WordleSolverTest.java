@@ -9,13 +9,13 @@ public class WordleSolverTest extends TestCase {
 		
 		long result;
 		// Forward
-		result = WordleSolver.findFirst(file, 'f');
+		result = WordleSolver.findFirstLetterInstance(file, 'f');
 		assertEquals(5, result);
 		// Middle
-		result = WordleSolver.findFirst(file, 'd');
+		result = WordleSolver.findFirstLetterInstance(file, 'd');
 		assertEquals(3, result);
 		// Backward
-		result = WordleSolver.findFirst(file, 'b');
+		result = WordleSolver.findFirstLetterInstance(file, 'b');
 		assertEquals(1, result);
 	}
 
@@ -25,10 +25,10 @@ public class WordleSolverTest extends TestCase {
 		
 		long result;
 		// Run off start of file
-		result = WordleSolver.findFirst(file, 'a');
+		result = WordleSolver.findFirstLetterInstance(file, 'a');
 		assertEquals(-1, result);
 		// Run off end of file
-		result = WordleSolver.findFirst(file, 'z');
+		result = WordleSolver.findFirstLetterInstance(file, 'z');
 		assertEquals(-1, result);
 	}
 }

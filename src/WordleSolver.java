@@ -11,32 +11,34 @@ public class WordleSolver {
 
 	public static void main(String[] args) {
 		File wordBankFile = new File("wordBank").getAbsoluteFile();
-		findFirst(wordBankFile, 'd');
+		long instance = findFirstLetterInstance(wordBankFile, 'd');
 	}
 
-	public static long findFirst(final File file, final Character letterToFind) {
+	public static long findFirstLetterInstance(final File file, final Character letterToFind) {
 		FileInputStream stream = null;
 		try {
 			stream = new FileInputStream(file);
-			long position = findFirstError(file, letterToFind, stream);
+			long position = findFirstLetterInstanceError(file, letterToFind, stream);
 			return position;
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Could not read from file");
 			return -1;
 		} catch (IndexOutOfBoundsException e) {
 			System.out.println("File does not contain any possible words with these restrictions");
 			return -1;
 		} finally {
 			try {
-				if (stream != null)
+				if (stream != null) {
 					stream.close();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
-	private static long findFirstError(final File file, final Character letterToFind, final FileInputStream stream)
+	private static long findFirstLetterInstanceError(final File file, final Character letterToFind,
+			final FileInputStream stream)
 			throws IOException, IndexOutOfBoundsException {
 		FileChannel fc = stream.getChannel();
 		RandomAccessFileReader buffer = new RandomAccessFileReader(fc);
